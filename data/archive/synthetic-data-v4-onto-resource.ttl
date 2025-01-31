@@ -1,0 +1,353 @@
+@base onto: <http://example.com/metaonto#> .
+@prefix meta: <http://example.com/metadata#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dprod: <https://ekgf.github.io/dprod/> .
+
+
+# Data Product
+
+#SDP
+meta:CASE_DP a onto:SourceDataProduct ;
+    dct:title "Case Data Product"^^xsd:string ;
+    dct:description "Source system list of open service cases"^^xsd:string ;
+    dprod:dataProductOwner meta:JohnDoe ;
+    dprod:domain meta:Services ;
+    dprod:outputDataset meta:CASE_DS ;
+    dprod:outputPort  meta:CASE_PORT ;
+    dcat:theme meta:Case ;
+    onto:resourceURL <https://api.example.com/case_dp> .
+
+ meta:ORDER_DP a onto:SourceDataProduct ;
+    dct:title "Order Data Product"^^xsd:string ;
+    dct:description "Source system list of orders"^^xsd:string ;
+    dprod:dataProductOwner meta:JaneSmith ;
+    dprod:domain meta:Sales ;
+    dprod:outputDataset meta:ORDER_DS ;
+    dprod:outputPort meta:ORDER_PORT ;
+    dcat:theme meta:Order ;
+    onto:resourceURL <https://api.example.com/order_dp> .
+
+
+ meta:CUST_DP a onto:SourceDataProduct ;
+    dct:title "Customer Data Product"^^xsd:string ;
+    dct:description "Source system list of customers"^^xsd:string ;
+    dprod:dataProductOwner meta:JaneSmith ;
+    dprod:domain meta:Sales ;
+    dprod:outputDataset meta:CUST_DS ;
+    dprod:outputPort meta:CUST_PORT ;
+    dcat:theme meta:Customer, meta:Party ;
+    onto:resourceURL <https://api.example.com/cust_dp> .
+
+#ADP
+ meta:CASE_PRIO_DP a onto:AggregateDataProduct ;
+    dct:title "Case Priority Data Product"^^xsd:string ;
+    dct:description "Automated prioritization of cases based on description"^^xsd:string ;
+    dprod:dataProductOwner meta:JohnDoe ;
+    dprod:domain meta:Services ;
+    dprod:inputDataset meta:CASE_DS ;
+    dprod:outputDataset meta:CASE_PRIO_DS ;
+    dprod:inputPort meta:CASE_PORT ;
+    dprod:outputPort meta:CASE_PRIO_PORT ;
+    dcat:theme meta:Case ;
+    onto:resourceURL <https://api.example.com/case_prio_dp> .
+
+ meta:CUST_ORDER_DP a :AggregateDataProduct ;
+    dct:title "Customer Order Data Product"^^xsd:string ;
+    dct:description "Detailed information of orders per customer"^^xsd:string ;
+    dprod:dataProductOwner meta:JaneSmith ;
+    dprod:domain meta:Sales ;
+    dprod:inputDataset meta:CUST_DS, meta:ORDER_DS ;
+    dprod:outputDataset meta:CUST_ORDER_DS ;
+    dprod:inputPort meta:CUST_PORT, meta:ORDER_PORT ;
+    dprod:outputPort meta:CUST_ORDER_PORT ;
+    dcat:theme meta:Customer, meta:Order, meta:Party ;
+    onto:resourceURL <https://api.example.com/cust_order_dp> .
+
+
+ meta:CUST_CASE_DP a onto:AggregateDataProduct ;
+    dct:title "Customer Cases Data Product"^^xsd:string ;
+    dct:description "Detailed information of cases per customer"^^xsd:string ;
+    dprod:dataProductOwner meta:JohnDoe ;
+    dprod:domain meta:Services ;
+    dprod:inputDataset meta:CUST_DS, meta:CASE_DS ;
+    dprod:outputDataset meta:CUST_CASE_DS ;
+    dprod:inputPort meta:CUST_PORT, meta:CASE_PORT ;
+    dprod:outputPort meta:CUST_CASE_PORT ;
+    dcat:theme meta:Customer, meta:Case, meta:Party ;
+    onto:resourceURL <https://api.example.com/cust_case_dp> .
+
+#UDP
+meta:ORDER_PRIO_DP a :UseCaseDataProduct ;
+    dct:title "Order Priority Data Product"^^xsd:string ;
+    dct:description "Automated prioritization of orders based on customer case priorities"^^xsd:string ;
+    dprod:dataProductOwner meta:JohnDoe ;
+    dprod:domain meta:SupplyChain ;
+    dprod:inputDataset meta:CUST_ORDER_DS, meta:CUST_CASE_DS, meta:CASE_PRIO_DS ;
+    dprod:outputDataset meta:ORDER_PRIO_DS ;
+    dprod:inputPort meta:CUST_ORDER_PORT, meta:CUST_CASE_PORT, meta:CASE_PRIO_PORT ;
+    dprod:outputPort meta:ORDER_PRIO_PORT ;
+    dcat:theme meta:Order, meta:Customer, meta:Case, meta:Party ;
+    onto:resourceURL <https://api.example.com/order_prio_dp> .
+
+# Data Service
+
+meta:CASE_PORT a dcat:DataService ;
+    dct:title "Case data access port"^^xsd:string ;
+    dct:description "Service provinding access to Case data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/case_port> ;
+    dcat:servesDataset meta:CASE_DS .
+        
+meta:ORDER_PORT a dcat:DataService ;
+    dct:title "Order data access port"^^xsd:string ;
+    dct:description "Service providing access to Order data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/order_port> ;
+    dcat:servesDataset meta:ORDER_DS .
+    
+meta:CUST_PORT a dcat:DataService ;
+    dct:title "Customer data access port"^^xsd:string ;
+    dct:description "Service providing access to Customer data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/cust_port> ;
+    dcat:servesDataset meta:CUST_DS .
+
+meta:CASE_PRIO_PORT a dcat:DataService ;
+    dct:title "Case priority access port"^^xsd:string ;
+    dct:description "Service providing access to Case priority data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/case_prio_port> ;
+    dcat:servesDataset meta:CASE_PRIO_DS .
+    
+meta:CUST_ORDER_PORT a dcat:DataService ;
+    dct:title "Customer order access port"^^xsd:string ;
+    dct:description "Service providing access to Customer order data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/cust_order_port> ;
+    dcat:servesDataset meta:CUST_ORDER_DS .
+    
+meta:CUST_CASE_PORT a dcat:DataService ;
+    dct:title "Customer case access port"^^xsd:string ;
+    dct:description "Service providing access to Customer case data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/cust_case_port> ;
+    dcat:servesDataset meta:CUST_CASE_DS .
+
+meta:ORDER_PRIO_PORT a dcat:DataService ;
+    dct:title "Order priority access port"^^xsd:string ;
+    dct:description "Service providing access to Order priority data"^^xsd:string ;
+    dcat:endpointURL <https://api.example.com/order_prio_port> ;
+    dcat:servesDataset meta:ORDER_PRIO_DS .
+
+# Distribution
+
+meta:CASE_SQL a dcat:Distribution ;
+    dct:title "Case SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Case data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:CASE_DS ;
+    dcat:accessService meta:CASE_PORT .
+
+meta:ORDER_SQL a dcat:Distribution ;
+    dct:title "Order SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Order data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:ORDER_DS ;
+    dcat:accessService meta:ORDER_PORT .
+
+meta:CUST_SQL a dcat:Distribution ;
+    dct:title "Customer SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Customer data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:CUST_DS ;
+    dcat:accessService meta:CUST_PORT .
+
+meta:CASE_PRIO_SQL a dcat:Distribution ;
+    dct:title "Case priority SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Case priority data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:CASE_PRIO_DS ;
+    dcat:accessService meta:CASE_PRIO_PORT .
+
+meta:CUST_ORDER_SQL a dcat:Distribution ;
+    dct:title "Customer order SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Customer order data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:CUST_ORDER_DS ;
+    dcat:accessService meta:CUST_ORDER_PORT .
+
+meta:CUST_CASE_SQL a dcat:Distribution ;
+    dct:title "Customer case SQL distribution"^^xsd:string ;
+    dct:description "Distribution of Customer case data in SQL"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/sql> ;
+    dcat:isDistributionOf meta:CUST_CASE_DS ;
+    dcat:accessService meta:CUST_CASE_PORT .
+
+meta:ORDER_PRIO_BI a dcat:Distribution ;
+    dct:title "Order priority BI Report"^^xsd:string ;
+    dct:description "Distribution of Order priority data in a BI Report"^^xsd:string ;
+    dct:format <https://www.iana.org/assignments/media-types/application/vnd.hcl-bireports> ;
+    dcat:isDistributionOf meta:ORDER_PRIO_DS ;
+    dcat:accessService meta:ORDER_PRIO_PORT .
+
+# Data Asset
+
+meta:CASE_DS a onto:DataAsset ;
+    dct:title "Case Table"^^xsd:string ;
+    dct:description "Table with open service cases"^^xsd:string ;
+    onto:comprisesElement meta:CASE_CASE_ID, meta:CASE_CASE_DESC .
+
+meta:ORDER_DS a onto:DataAsset ;
+    dct:title "Order Table"^^xsd:string ;
+    dct:description "Table with order details"^^xsd:string ;
+    onto:comprisesElement meta:ORDER_ORDER_NUM, meta:ORDER_CUST_ID .
+
+meta:CUST_DS a onto:DataAsset ;
+    dct:title "Customer Table"^^xsd:string ;
+    dct:description "Table with customer details"^^xsd:string ;
+    onto:comprisesElement meta:CUST_CUST_ID, meta:CUST_CUST_RT .
+
+meta:CASE_PRIO_DS a onto:DataAsset ;
+    dct:title "Case Priority Table"^^xsd:string ;
+    dct:description "Table with cases classified by priority"^^xsd:string ;
+    onto:comprisesElement meta:CASE_PRIO_CASE_ID, meta:CASE_PRIO_RT .
+
+meta:CUST_ORDER_DS a onto:DataAsset ;
+    dct:title "Customer Order Table"^^xsd:string ;
+    dct:description "Table with orders per customer"^^xsd:string ;
+    onto:comprisesElement meta:CUST_ORDER_ORDER_NUM, meta:CUST_ORDER_CUST_ID .
+
+meta:CUST_CASE_DS a onto:DataAsset ;
+    dct:title "Customer Case Table"^^xsd:string ;
+    dct:description "Table with cases per customer"^^xsd:string ;
+    onto:comprisesElement meta:CUST_CASE_CUST_ID, meta:CUST_CASE_PRIO_RT, meta:CUST_CASE_CUST_RT .
+
+meta:ORDER_PRIO_DS a onto:DataAsset ;
+    dct:title "Order Priority Table"^^xsd:string ;
+    dct:description "Table with orders classified by priority"^^xsd:string ;
+    onto:comprisesElement meta:ORDER_PRIO_ORDER_NUM, meta:ORDER_PRIO_TOTAL_RT .
+
+
+# Data Element
+
+meta:CASE_CASE_ID a onto:DataElement ;
+    dct:title "Case ID"^^xsd:string ;
+    dct:description "Unique identifier for a service case"^^xsd:string .
+
+meta:CASE_CASE_DESC a onto:DataElement ;
+    dct:title "Case Description"^^xsd:string ;
+    dct:description "Description of the service case"^^xsd:string .
+
+meta:ORDER_ORDER_NUM a onto:DataElement ;
+    dct:title "Order Number"^^xsd:string ;
+    dct:description "Unique identifier for an order"^^xsd:string .
+
+meta:ORDER_CUST_ID a onto:DataElement ;
+    dct:title "Customer ID"^^xsd:string ;
+    dct:description "Unique identifier for a customer"^^xsd:string .
+
+meta:CUST_CUST_ID a onto:DataElement ;
+    dct:title "Customer ID"^^xsd:string ;
+    dct:description "Unique identifier for a customer"^^xsd:string .
+
+meta:CUST_CUST_RT a onto:DataElement ;
+    dct:title "Customer Rating"^^xsd:string ;
+    dct:description "Rating given to a customer based on past purchases"^^xsd:string .
+
+meta:CASE_PRIO_CASE_ID a onto:DataElement ;
+    dct:title "Case ID"^^xsd:string ;
+    dct:description "Unique identifier for a service case"^^xsd:string .
+
+meta:CASE_PRIO_RT a onto:DataElement ;
+    dct:title "Case Priority Rating"^^xsd:string ;
+    dct:description "Priority rating assigned to a service case"^^xsd:string .
+
+meta:CUST_ORDER_ORDER_NUM a onto:DataElement ;
+    dct:title "Order Number"^^xsd:string ;
+    dct:description "Unique identifier for an order"^^xsd:string .
+
+meta:CUST_ORDER_CUST_ID a onto:DataElement ;
+    dct:title "Customer ID"^^xsd:string ;
+    dct:description "Unique identifier for a customer"^^xsd:string .
+
+meta:CUST_CASE_CUST_RT a onto:DataElement ;
+    dct:title "Customer Rating"^^xsd:string ;
+    dct:description "Rating given to a customer based on past purchases"^^xsd:string .
+
+meta:CUST_CASE_CUST_ID a onto:DataElement ;
+    dct:title "Customer ID"^^xsd:string ;
+    dct:description "Unique identifier for a customer"^^xsd:string .
+
+meta:CUST_CASE_PRIO_RT a onto:DataElement ;
+    dct:title "Case Priority Rating"^^xsd:string ;
+    dct:description "Priority rating assigned to a service case"^^xsd:string .
+
+meta:ORDER_PRIO_ORDER_NUM a onto:DataElement ;
+    dct:title "Order Number"^^xsd:string ;
+    dct:description "Unique identifier for an order"^^xsd:string .
+
+meta:ORDER_PRIO_TOTAL_RT a onto:DataElement ;
+    dct:title "Total Rating"^^xsd:string ;
+    dct:description "Total rating assigned to an order based on customer case priorities"^^xsd:string .
+
+
+# Taxonomy
+
+
+meta:UnifiedTaxonomy a skos:ConceptScheme ;
+    skos:prefLabel "Unified Taxonomy"^^xsd:string ;
+    skos:definition "A unified taxonomy for concepts"^^xsd:string ;
+    skos:inScheme meta:UnifiedTaxonomy .
+
+meta:Order a skos:Concept ;
+    skos:prefLabel "Order"^^xsd:string ;
+    skos:definition "A request for goods or services"^^xsd:string ;
+    skos:inScheme meta:UnifiedTaxonomy .
+ 
+meta:Customer a skos:Concept ;
+    skos:prefLabel "Customer"^^xsd:string ;
+    skos:definition "A person or organization that buys goods or services"^^xsd:string ;
+    skos:broader meta:Party ;
+    skos:inScheme meta:UnifiedTaxonomy .
+ 
+meta:Case a skos:Concept ;
+    skos:prefLabel "Case"^^xsd:string ;
+    skos:definition "A service request"^^xsd:string ;
+    skos:inScheme meta:UnifiedTaxonomy .
+ 
+meta:Party a skos:Concept ;
+    skos:prefLabel "Party"^^xsd:string ;
+    skos:inScheme meta:UnifiedTaxonomy .
+
+
+# Agents
+
+meta:JohnDoe a foaf:Person ;
+    foaf:name "John Doe"^^xsd:string ;
+    foaf:mbox <mailto:john.doe@example.com> .
+
+meta:JaneSmith a foaf:Person ;
+    foaf:name "Jane Smith"^^xsd:string ;
+    foaf:mbox <mailto:jane.smith@example.com> . 
+
+
+# Domain
+
+meta:Services a onto:Domain ;
+    skos:prefLabel "Services"^^xsd:string ;
+    skos:definition "Services provided by an organization"^^xsd:string .
+
+meta:Sales a onto:Domain ;
+    skos:prefLabel "Sales"^^xsd:string ;
+    skos:definition "Sales activities of an organization"^^xsd:string .
+
+meta:SupplyChain a onto:Domain ;
+    skos:prefLabel "Supply Chain"^^xsd:string ;
+    skos:definition "Supply chain activities of an organization"^^xsd:string .
+
+
+
+

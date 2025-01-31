@@ -1,0 +1,184 @@
+@prefix onto: <http://example.com/metaonto#> .
+@prefix meta: <http://example.com/metadata#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dprod: <https://ekgf.github.io/dprod/> .
+
+
+<http://example.com/metaonto#> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+dct:description rdf:type owl:AnnotationProperty .
+
+dct:format rdf:type owl:AnnotationProperty .
+
+dct:title rdf:type owl:AnnotationProperty ;
+          rdfs:range rdfs:Literal .
+
+skos:definition rdf:type owl:AnnotationProperty ;
+                rdfs:subPropertyOf skos:note .
+
+skos:note rdf:type owl:AnnotationProperty .
+
+skos:prefLabel rdf:type owl:AnnotationProperty ;
+               rdfs:subPropertyOf rdfs:label .
+
+foaf:name rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+xsd:date rdf:type rdfs:Datatype .
+
+xsd:duration rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+onto:comprisesElement rdf:type owl:ObjectProperty ;
+                  rdfs:domain onto:DataAsset ;
+                  rdfs:range onto:DataElement .
+
+
+onto:resourceURL rdf:type owl:ObjectProperty ;
+                rdfs:domain owl:Thing ;
+                rdfs:range rdfs:Resource .
+
+onto:inputDataProduct rdf:type owl:ObjectProperty ;
+                  owl:propertyChainAxiom ( dprod:inputPort
+                                           onto:isOutputPortOf
+                                         ) .
+
+onto:isOutputPortOf rdf:type owl:ObjectProperty ;
+                owl:inverseOf dprod:outputPort .
+
+skos:broader rdf:type owl:ObjectProperty ;
+             owl:inverseOf skos:narrower .
+
+skos:inScheme rdf:type owl:ObjectProperty ;
+              rdfs:domain skos:Concept ;
+              rdfs:range skos:ConceptScheme .
+
+skos:narrower rdf:type owl:ObjectProperty .
+
+dcat:accessService rdf:type owl:ObjectProperty ;
+                   owl:inverseOf dprod:isAccessServiceOf ;
+                   rdfs:domain dcat:Distribution ;
+                   rdfs:range dcat:DataService .
+
+dcat:distribution rdf:type owl:ObjectProperty ;
+                  owl:inverseOf dprod:isDistributionOf ;
+                  rdfs:domain dcat:Dataset ;
+                  rdfs:range dcat:Distribution .
+
+dcat:endpointURL rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf onto:resourceURL ;
+                 rdfs:domain dcat:DataService ;
+                 rdfs:range rdfs:Resource .
+
+dcat:servesDataset rdf:type owl:ObjectProperty ;
+                   rdfs:domain dcat:DataService ;
+                   rdfs:range dcat:Dataset .
+
+dcat:theme rdf:type owl:ObjectProperty ;
+           rdfs:domain dcat:Resource ;
+           rdfs:range skos:Concept .
+
+foaf:mbox rdf:type owl:ObjectProperty ,
+                   owl:InverseFunctionalProperty ;
+          rdfs:domain foaf:Agent ;
+          rdfs:range owl:Thing .
+
+dprod:dataProductOwner rdf:type owl:ObjectProperty ;
+                       rdfs:domain dprod:DataProduct ;
+                       rdfs:range prov:Agent .
+
+dprod:domain rdf:type owl:ObjectProperty ;
+             rdfs:domain dprod:DataProduct ;
+             rdfs:range onto:Domain .
+
+dprod:inputDataset rdf:type owl:ObjectProperty ;
+                   rdfs:domain dprod:DataProduct ;
+                   rdfs:range dcat:Dataset .
+
+dprod:inputPort rdf:type owl:ObjectProperty ;
+                rdfs:domain dprod:DataProduct ;
+                rdfs:range dcat:DataService .
+
+dprod:isAccessServiceOf rdf:type owl:ObjectProperty ;
+                        rdfs:domain dcat:DataService ;
+                        rdfs:range dcat:Distribution .
+
+dprod:isDistributionOf rdf:type owl:ObjectProperty ;
+                       rdfs:domain dcat:Distribution ;
+                       rdfs:range dcat:Dataset .
+
+dprod:outputDataset rdf:type owl:ObjectProperty ;
+                    rdfs:domain dprod:DataProduct ;
+                    rdfs:range dcat:Dataset .
+
+dprod:outputPort rdf:type owl:ObjectProperty ;
+                 rdfs:domain dprod:DataProduct ;
+                 rdfs:range dcat:DataService .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+onto:AggregateDataProduct rdf:type owl:Class ;
+                      rdfs:subClassOf dprod:DataProduct .
+
+onto:DataAsset rdf:type owl:Class ;
+           rdfs:subClassOf dcat:Dataset .
+
+onto:DataElement rdf:type owl:Class ;
+             rdfs:subClassOf dcat:Dataset .
+
+onto:Domain rdf:type owl:Class .
+
+onto:SourceDataProduct rdf:type owl:Class ;
+                   rdfs:subClassOf dprod:DataProduct .
+
+onto:UseCaseDataProduct rdf:type owl:Class ;
+                    rdfs:subClassOf dprod:DataProduct .
+
+rdfs:Resource rdf:type owl:Class .
+
+skos:Concept rdf:type owl:Class ;
+             owl:disjointWith skos:ConceptScheme .
+
+skos:ConceptScheme rdf:type owl:Class .
+
+dcat:DataService rdf:type owl:Class ;
+                 rdfs:subClassOf dcat:Resource .
+
+dcat:Dataset rdf:type owl:Class ;
+             rdfs:subClassOf dcat:Resource .
+
+dcat:Distribution rdf:type owl:Class .
+
+dcat:Resource rdf:type owl:Class .
+
+prov:Agent rdf:type owl:Class ;
+           owl:equivalentClass foaf:Agent .
+
+foaf:Agent rdf:type owl:Class .
+
+dprod:DataProduct rdf:type owl:Class ;
+                  rdfs:subClassOf dcat:Resource .

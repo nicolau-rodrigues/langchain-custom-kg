@@ -1,0 +1,193 @@
+templates:
+  - name: "list_all_the_data_products"
+    template: |
+      PREFIX dprod: <https://ekgf.github.io/dprod/>
+      PREFIX dct: <http://purl.org/dc/terms/>
+      PREFIX onto: <http://example.com/metaonto#>
+      SELECT ?dataProduct (CONCAT("[", STR(?title), "](", STR(?url), ")") AS ?formattedOutput) WHERE {
+        ?dataProduct a dprod:DataProduct ;
+                    dct:title ?title ;
+                    onto:resourceURL ?url .
+      }
+    description: "List all the data products."
+    tags:
+      - "dataProduct"
+      - "list"
+      - "data products"
+      - "all data products"
+
+  - name: "list_all_the_domains"
+    template: |
+      PREFIX onto: <http://example.com/metaonto#>
+      SELECT ?domain WHERE {
+        ?domain a onto:Domain .
+      }
+    description: "List all the domains."
+    tags:
+      - "domain"
+      - "list"
+      - "all domains"
+      - "all the domains"
+
+  - name: "list_all_the_concepts"
+    template: |
+      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+      select ?concept where {
+        ?concept a skos:Concept .
+      } 
+    description: "List all the concepts."
+    tags:
+      - "concept"
+      - "list"
+      - "all concepts"
+      - "all the concepts"
+
+  - name: "get_data_products_by_domain"
+    template: |
+      PREFIX meta: <http://example.com/metadata#>
+      PREFIX onto: <http://example.com/metaonto#>
+      SELECT ?dataProduct WHERE 
+      { 
+          ?dataProduct a dprod:DataProduct . 
+          ?dataProduct dprod:domain meta:{{ specific_domain }} . 
+      }
+    description: "List the data products of an specific domain."
+    tags:
+      - "specific domain"
+      - "domain"
+      - "filter"
+      - "list"
+
+  - name: "get_data_products_by_concept"
+    template: |
+      PREFIX dcat: <http://www.w3.org/ns/dcat#>
+      PREFIX meta: <http://example.com/metadata#>
+      SELECT ?dataProduct WHERE {
+        ?dataProduct dcat:theme meta:Case.
+      }
+    description: "List the data products of an specific concept."
+    tags:
+      - "specific concept"
+      - "concept"
+      - "cover concept"
+      - "list"
+
+  - name: "get_data_owners"
+    template: |
+      PREFIX dprod: <https://ekgf.github.io/dprod/> 
+      SELECT distinct ?owner 
+      WHERE { 
+          ?product dprod:dataProductOwner ?owner . 
+      }
+    description: "Retrieve all the data owners."
+    tags:
+      - "data-owners"
+      - "dataProductOwner"
+      - "all data owners"
+
+  - name: "get_class_instances"
+    template: |
+      SELECT ?instance
+      WHERE {
+        ?instance a {{ class_uri }} .
+      }
+    description: "Retrieve all instances of a specific class."
+    tags:
+      - "basic"
+      - "instances"
+      - "class"
+
+  - name: "get_object_property_relations"
+    template: |
+      SELECT ?subject ?object
+      WHERE {
+        ?subject {{ property_uri }} ?object .
+      }
+    description: "Retrieve all subject-object pairs related by a specific object property."
+    tags:
+      - "relations"
+      - "object-property"
+
+  - name: "get_datatype_property_values"
+    template: |
+      SELECT ?subject ?value
+      WHERE {
+        ?subject {{ property_uri }} ?value .
+      }
+    description: "Retrieve values of a datatype property for all subjects."
+    tags:
+      - "datatype-property"
+      - "values"
+
+  - name: "get_instances_with_property"
+    template: |
+      SELECT ?instance
+      WHERE {
+        ?instance a {{ class_uri }} .
+        ?instance {{ property_uri }} ?value .
+      }
+    description: "Retrieve all instances of a class that have a specific property."
+    tags:
+      - "filter"
+      - "class"
+      - "property"
+
+  - name: "get_hierarchical_structure"
+    template: |
+      SELECT ?concept ?broaderConcept
+      WHERE {
+        ?concept skos:broader ?broaderConcept .
+      }
+    description: "Retrieve hierarchical relationships between concepts using SKOS 'broader' property."
+    tags:
+      - "skos"
+      - "hierarchy"
+      - "concepts"
+
+  - name: "get_datasets_by_theme"
+    template: |
+      SELECT ?dataset
+      WHERE {
+        ?dataset dcat:theme {{ theme_uri }} .
+      }
+    description: "Retrieve datasets classified under a specific theme."
+    tags:
+      - "dcat"
+      - "datasets"
+      - "theme"
+
+  - name: "get_services_for_dataset"
+    template: |
+      SELECT ?service
+      WHERE {
+        ?service dcat:servesDataset {{ dataset_uri }} .
+      }
+    description: "Retrieve data services that serve a specific dataset."
+    tags:
+      - "dcat"
+      - "services"
+      - "datasets"
+
+  - name: "get_dataset_distributions"
+    template: |
+      SELECT ?distribution
+      WHERE {
+        {{ dataset_uri }} dcat:distribution ?distribution .
+      }
+    description: "Retrieve all distributions of a specific dataset."
+    tags:
+      - "dcat"
+      - "distributions"
+      - "datasets"
+
+  - name: "get_agents_with_email"
+    template: |
+      SELECT ?agent
+      WHERE {
+        ?agent foaf:mbox ?email .
+      }
+    description: "Retrieve agents that have an email address defined."
+    tags:
+      - "foaf"
+      - "agents"
+      - "email"
